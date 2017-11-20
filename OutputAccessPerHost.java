@@ -12,7 +12,7 @@ public class OutputAccessPerHost extends OutputAbstract {
 	public void PrintHeader(ArrayList<String> filenames) {
 		outputln("解析手法：ホスト別アクセス数");
 		output("解析対象ログ：");
-		for (int i = 0; i < filenames.size(); i++) output(filenames.get(i));
+		for (int i = 0; i < filenames.size(); i++) output(filenames.get(i)+" ");
 		output("\n");
 	}
 
