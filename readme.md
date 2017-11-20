@@ -4,11 +4,11 @@
 
 
 実行方法：
-アップロードしたjar形式のバイナリを用いる場合、
+配布jarファイルを用いる場合、
 
 ・Windowsのコマンドプロンプトで実行
 
-  java -jar MainControler.jar [-m (hour|host)] [-f ("filename" )*"filename"]
+  java -jar collect.jar [-m (hour|host)] [-f ("filename" )*"filename"]
                               [-s "period"] [-e "period"]
                               
   -m | --method (hour|host)
@@ -31,7 +31,7 @@
     
 実行例：
 
-> java -jar -m host -f aa.log aa2.log
+> java -jar collect.jar -m host -f aa.log aa2.log
 解析手法：ホスト別アクセス数
 解析対象ログ：aa.log aa2.log
 10.2.3.4 -> 10
