@@ -15,7 +15,7 @@ public class MainControler {
 		HOST,
 	}*/
 
-	private static String collect_method;
+	private static String collect_method = "";
 	private static ArrayList<String> filenames = new ArrayList<String>();
 	private static Calendar[] collect_period = new Calendar[2];
 
