@@ -1,6 +1,7 @@
-package fixPointPrograming;
+package apacheLogAnalyzer;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -18,15 +19,15 @@ public class OutputAccessPerHour extends OutputAbstract {
 
 	@Override
 	public void PrintLog(CollectedData result) {
-		List<Map.Entry<String, Integer>> hours = new ArrayList<Map.Entry<String, Integer>>(result.access_per_hour.entrySet());
-		Collections.sort( hours, new Comparator<Map.Entry<String, Integer>>() {
-			public int compare( Map.Entry<String, Integer> tuple1, Map.Entry<String, Integer> tuple2 ) {
-				return DateStyle.compare(tuple1.getKey(), tuple2.getKey());
+		List<Map.Entry<Calendar, Integer>> hours = new ArrayList<Map.Entry<Calendar, Integer>>(result.access_per_hour.entrySet());
+		Collections.sort( hours, new Comparator<Map.Entry<Calendar, Integer>>() {
+			public int compare( Map.Entry<Calendar, Integer> tuple1, Map.Entry<Calendar, Integer> tuple2 ) {
+				return tuple1.getKey().compareTo(tuple2.getKey());
 			}
 		});
 
-		for (Map.Entry<String, Integer> hour:hours) {
-			outputln(hour.getKey() + " -> " + hour.getValue().toString());
+		for (Map.Entry<Calendar, Integer> hour:hours) {
+			outputln(DateStyle.calendarOutput(hour.getKey()) + " -> " + hour.getValue().toString());
 		}
 	}
 }

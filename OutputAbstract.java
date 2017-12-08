@@ -1,4 +1,4 @@
-package fixPointPrograming;
+package apacheLogAnalyzer;
 
 import java.util.ArrayList;
 

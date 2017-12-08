@@ -1,4 +1,4 @@
-package fixPointPrograming;
+package apacheLogAnalyzer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,14 +18,14 @@ public class OutputAccessPerHost extends OutputAbstract {
 
 	@Override
 	public void PrintLog(CollectedData result) {
-		List<Map.Entry<String, Integer>> hosts = new ArrayList<Map.Entry<String, Integer>>(result.access_per_host.entrySet());
-		Collections.sort( hosts, new Comparator<Map.Entry<String, Integer>>() {
-			public int compare( Map.Entry<String, Integer> tuple1, Map.Entry<String, Integer> tuple2 ) {
+		List<Map.Entry<IPAddress, Integer>> hosts = new ArrayList<Map.Entry<IPAddress, Integer>>(result.access_per_host.entrySet());
+		Collections.sort( hosts, new Comparator<Map.Entry<IPAddress, Integer>>() {
+			public int compare( Map.Entry<IPAddress, Integer> tuple1, Map.Entry<IPAddress, Integer> tuple2 ) {
 		        return (tuple2.getValue().compareTo(tuple1.getValue()));
 			}
 		});
 
-		for (Map.Entry<String, Integer> host:hosts) {
+		for (Map.Entry<IPAddress, Integer> host:hosts) {
 			outputln(host.getKey() + " -> " + host.getValue().toString());
 		}
 	}

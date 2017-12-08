@@ -1,18 +1,25 @@
-package fixPointPrograming;
+package apacheLogAnalyzer;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Calendar;
 
 public class MainControler {
-	private static String collect_method = "";
+	/*
+	enum collect_methods_list {
+		UNDEFINED,
+		TIME,
+		HOST,
+	}*/
+
+	private static String collect_method;
 	private static ArrayList<String> filenames = new ArrayList<String>();
-	private static String[] collect_period = {"", ""};
-	
+	private static Calendar[] collect_period = new Calendar[2];
+
+
 	public static void main(String[] args) {
 		getArgs(args);
 
@@ -33,11 +40,11 @@ public class MainControler {
 			output = new OutputAccessPerHost();
 		}
 		else System.exit(1);
-		CollectedData result = DataCollector.forEachFile(filenames, method, collect_period);
-
-		DebugPrint.println(result.access_per_hour.values());
 
 		output.PrintHeader(filenames);
+
+		CollectedData result = DataCollector.forEachFile(filenames, method, collect_period);
+
 		output.PrintLog(result);
 	}
 
@@ -86,13 +93,11 @@ public class MainControler {
 					System.out.println("please input start of collect period");
 					System.exit(0);
 				}
-				Pattern p = Pattern.compile("^[0-9]{2}/.{3}/[0-9]{4}:[0-9]{2}$");
-				Matcher m = p.matcher(args[i+1]);
-				if (m.find()){
-					collect_period[0] = m.group();
-				} else {
+				try {
+					collect_period[0] = DateStyle.timeToCalendar(args[i+1]);
+				} catch (RuntimeException re) {
 					System.out.println("please input start of collect period with following style:");
-					System.out.println("  day/month/year:hour (e.g. 18/Apr/2017:03)");
+					System.out.println("  dd/MMM/yyyy:hh (e.g. 18/Apr/2017:03)");
 				}
 				i = i+1;
 			} else if (args[i].equals("-e") || args[i].equals("--end")) {
@@ -100,13 +105,11 @@ public class MainControler {
 					System.out.println("please input end of collect period");
 					System.exit(0);
 				}
-				Pattern p = Pattern.compile("^[0-9]{2}/.{3}/[0-9]{4}:[0-9]{2}$");
-				Matcher m = p.matcher(args[i+1]);
-				if (m.find()){
-					collect_period[1] = m.group();
-				} else {
+				try {
+					collect_period[1] = DateStyle.timeToCalendar(args[i+1]);
+				} catch (RuntimeException re) {
 					System.out.println("please input end of collect period with following style:");
-					System.out.println("  day/month/year:hour (e.g. 18/Apr/2017:03)");
+					System.out.println("  dd/MMM/yyyy:hh (e.g. 18/Apr/2017:03)");
 				}
 				i = i+1;
 			}
