@@ -7,13 +7,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DateStyle {
-	// expects "01/Jan/2017:00 +0900"
+	// expects "01/Jan/2017:00 +0900" format
 	public static SimpleDateFormat fmt
 		= new SimpleDateFormat("dd/MMM/yyyy:HH Z");
 
 	public static Calendar timeToCalendar (String time) throws RuntimeException{
-		//ToDo: タイムゾーンが一致しないような範囲でのログ収集を正しく行うにはタイムゾーンを元に足し引きが必要
-		Pattern p = Pattern.compile("[0-9]{2}/.{3}/[0-9]{4}:[0-9]{2}:[0-9]{2}:[0-9]{2}\\s\\+[0-9]{4}");
+		Pattern p = Pattern.compile("[0-9]{2}/.{3}/[0-9]{4}:[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{4}");
 		Matcher m = p.matcher(time);
 
 		if (m.find()) {
@@ -23,8 +22,8 @@ public class DateStyle {
 			int month = mToNum(str.substring(3, 6));
 			int day = Integer.parseInt(str.substring(0, 2));
 			int hour = Integer.parseInt(str.substring(12, 14));
-			TimeZone tz = TimeZone.getTimeZone(str.substring(21,26)); //タイムゾーンはこれでは設定できない
-			//System.out.println(tz);
+			TimeZone tz = strToTimeZone(str.substring(21,26));
+			System.out.println(tz);
 			Calendar cal = new Calendar.Builder().setDate(year, month, day).setTimeOfDay(hour, 0, 0).setTimeZone(tz).build();
 			return cal;
 		}
@@ -44,6 +43,13 @@ public class DateStyle {
 		}
 
 		throw new RuntimeException("illegal date format");
+	}
+
+	private static TimeZone strToTimeZone(String str) {
+		String id = str.substring(0,1);
+		if (Integer.parseInt(str.substring(1, 2)) == 1) id = id+"1";
+		id = id+str.substring(2,3)+":"+str.substring(3,5);
+		return TimeZone.getTimeZone("GMT" + id);
 	}
 
 	public static String calendarOutput(Calendar cal) {

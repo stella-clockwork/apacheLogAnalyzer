@@ -16,7 +16,7 @@ public class DataCollector {
 		CollectedData result = new CollectedData();
 
 		for(int i=0; i < filenames.size(); i++) {
-			DebugPrint.println(filenames.get(i));
+			DebugPrint.println(filenames.get(i), DebugPrint.DEBUGING);
 			forEachLine(filenames.get(i), method, result, collect_period);
 		}
 		return result;
@@ -30,18 +30,21 @@ public class DataCollector {
 
 			while (reader.ready()) {
 				String line = reader.readLine();
-				DebugPrint.println(line);
+				DebugPrint.println(line, DebugPrint.DEBUGING);
 
 				String[] elements = line.split(" ");
 				// タイムゾーン部分が分離されてしまっているので結合しなおす
 				elements[3] = elements[3]+" "+elements[4];
-				
+
 				try {
-					if (!isDataCorrect(elements)) continue;
+					if (!isDataCorrect(elements)) {
+						DebugPrint.println("incorrect log line: " + line, DebugPrint.ERROR);
+						continue;
+					}
 					if (!inCorrectPeriod(DateStyle.timeToCalendar(elements[3]), collect_period)) continue;
 					method.collecting(elements, result);
 				} catch (RuntimeException re) {
-					;
+					DebugPrint.println(re.getMessage(), DebugPrint.ERROR);
 				}
 			}
 			reader.close();
@@ -64,7 +67,7 @@ public class DataCollector {
 	static boolean isDataCorrect(String[] elements) {
 		if (!IPv4Address.isCorrestIPv4(elements[0])) return false;
 
-		Pattern p = Pattern.compile("^\\[[0-9]{2}/.{3}/[0-9]{4}:[0-9]{2}:[0-9]{2}:[0-9]{2} \\+[0-9]{4}\\]$");
+		Pattern p = Pattern.compile("^\\[[0-9]{2}/.{3}/[0-9]{4}:[0-9]{2}:[0-9]{2}:[0-9]{2} [\\+\\-][0-9]{4}\\]$");
 		Matcher m = p.matcher(elements[3]);
 		if (!m.find()) {
 			return false;
